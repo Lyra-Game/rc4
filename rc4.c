@@ -57,7 +57,7 @@ void
 librc4_init(struct rc4_state *const state, const uint8_t *key, int keylen)
 {
     uint8_t j;
-    int i;
+    int i, k;
 
     /* Initialize state with identity permutation */
     for (i = 0; i < 256; i++)
@@ -66,9 +66,11 @@ librc4_init(struct rc4_state *const state, const uint8_t *key, int keylen)
     state->index2 = 0;
 
     /* Randomize the permutation using key data */
-    for (j = i = 0; i < 256; i++) {
-        j += state->perm[i] + key[i % keylen];
+    for (j = i = k = 0; i < 256; i++) {
+        j += state->perm[i] + key[k];
         swap_bytes(&state->perm[i], &state->perm[j]);
+        if (++k >= keylen)
+            k = 0;
     }
 }
 
