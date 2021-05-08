@@ -16,7 +16,12 @@ lrc4(lua_State * L) {
     size_t len;
     const char * key = luaL_checklstring(L, 1, &len);
 
+#if LUA_VERSION_NUM == 504
+    struct rc4_state * rc4 = (struct rc4_state *)lua_newuserdatauv(L, sizeof(*rc4), 0);
+#else
     struct rc4_state * rc4 = (struct rc4_state *)lua_newuserdata(L, sizeof(*rc4));
+#endif
+
     lua_pushvalue(L, 1);
     lua_setuservalue(L, -2);
 
