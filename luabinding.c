@@ -17,14 +17,14 @@ lrc4(lua_State * L) {
     const char * key = luaL_checklstring(L, 1, &len);
 
 #if LUA_VERSION_NUM == 504
-    struct rc4_state * rc4 = (struct rc4_state *)lua_newuserdatauv(L, sizeof(*rc4), 0);
+    struct rc4_state * rc4 = (struct rc4_state *)lua_newuserdatauv(L, sizeof(*rc4), 1);
 #else
     struct rc4_state * rc4 = (struct rc4_state *)lua_newuserdata(L, sizeof(*rc4));
 #endif
 
     lua_pushvalue(L, 1);
 #if LUA_VERSION_NUM == 504
-    lua_setiuservalue(L, -2, 0);
+    lua_setiuservalue(L, -2, 1);
 #else
     lua_setuservalue(L, -2);
 #endif
@@ -42,7 +42,7 @@ lreset(lua_State* L) {
     size_t len;
     struct rc4_state * rc4 = (struct rc4_state *)luaL_checkudata(L, 1, RC4_METATABLE);
 #if LUA_VERSION_NUM == 504
-    lua_getiuservalue(L, 1, 0);
+    lua_getiuservalue(L, 1, 1);
 #else
     lua_getuservalue(L, 1);
 #endif
