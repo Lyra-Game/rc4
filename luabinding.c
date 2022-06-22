@@ -69,7 +69,7 @@ lcrypt(lua_State * L) {
     return 0;
 }
 
-int
+LUAMOD_API int
 luaopen_rc4_c(lua_State *L) {
     luaL_checkversion(L);
 
