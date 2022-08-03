@@ -13,7 +13,7 @@ OBJ     = $(OBJ_C)
 all: $(PROJECT).so
 
 $(PROJECT).so: $(OBJ)
-	ld -shared $(OBJ) -o $(PROJECT).so
+	ld -shared $(OBJ) -o $(PROJECT).so -lcrypto -lssl
 ifdef OUTPUT
 	cp -f $(PROJECT).so $(OUTPUT)
 endif

@@ -5,6 +5,7 @@
 #include "lauxlib.h"
 
 #include "rc4.h"
+#include <openssl/rand.h>
 
 #include <stdlib.h>
 
@@ -69,6 +70,27 @@ lcrypt(lua_State * L) {
     return 0;
 }
 
+static int
+rand_do_bytes(lua_State *L, int (*bytes)(unsigned char *, int)) {
+    size_t count = (size_t)luaL_checkinteger(L, 1);
+    unsigned char tmp[256], *buf = tmp;
+    if (count > sizeof tmp)
+        buf = (unsigned char *)malloc(count);
+    if (!buf)
+        return luaL_error(L, "out of memory");
+    else if (!bytes(buf, (int)count))
+        return luaL_error(L, "rand bytes call error");
+    lua_pushlstring(L, (char *)buf, count);
+    if (buf != tmp)
+        free(buf);
+    return 1;
+}
+
+static int
+lrandbytes(lua_State *L) {
+    return rand_do_bytes(L, RAND_bytes);
+}
+
 LUAMOD_API int
 luaopen_rc4_c(lua_State *L) {
     luaL_checkversion(L);
@@ -86,6 +108,7 @@ luaopen_rc4_c(lua_State *L) {
 
     luaL_Reg l[] = {
         { "rc4", lrc4 },
+        { "randbytes", lrandbytes },
         { NULL, NULL },
     };
     luaL_newlib(L, l);
