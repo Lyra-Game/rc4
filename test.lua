@@ -51,9 +51,3 @@ end
 for i = 1, 10 do
     print(decode_data("asdf"))
 end
-
-for i = 1, 10 do
-    print("rand bytes =", string.byte(rc4.randbytes(1)))
-end
-print("rand bytes =", string.byte(rc4.randbytes(20), 1, 20))
-
